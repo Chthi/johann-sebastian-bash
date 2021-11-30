@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Beat per minute / Batement par minute
 bpm=187
 
