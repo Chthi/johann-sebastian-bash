@@ -1,2 +1,13 @@
 # johann-sebastian-bash
-Can you play music using Linux speaker-test ? Apparently.
+
+```
+./speaker_music.sh pirates
+```
+
+```
+./speaker_music.sh bells
+```
+
+```
+./speaker_music.sh march
+```
