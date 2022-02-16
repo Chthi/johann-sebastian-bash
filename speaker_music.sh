@@ -105,6 +105,11 @@ ca=128  # 2     breave/carré      = +long
 
 
 case $1 in
+  "test" )
+    melody=($a3 $c4 $d4 $d4)
+    beats=(8 8 16 12)
+    bpm=180;
+    ;;
   "pirates" )
     melody=($a3 $c4 $d4 $d4 $d4 $e4 $f4 $f4 $f4 $g4 $e4 $e4 $d4 $c4 $c4 $d4 $a4 $c4 $d4 $d4 $d4 $e4 $f4 $f4 $f4 $g4 $e4 $e4 $d4 $c4 $d4 $a4 $c4 $d4 $d4 $d4 $f4 $g4 $g4 $g4 $a4 $b4 $b4 $a4 $g4 $a4 $d4 $d4 $e4 $f4 $f4 $g4 $a4 $d4 $d4 $f4 $e4 $e4 $f4 $d4 $e4 $a4 $c5 $d5 $d5 $d5 $e5 $f5 $f5 $f5 $g5 $e5 $e5 $d5 $c5 $c5 $d5 $a4 $c5 $d5 $d5 $d5 $e5 $f5 $f5 $f5 $g5 $e5 $e5 $d5 $c5 $d5 $a4 $c5 $d5 $d5 $d5 $f5 $g5 $g5 $g5 $a5 $b5 $b5 $a5 $g5 $a5 $d5 $d5 $e5 $f5 $f5 $g5 $a5 $d5 $d5 $f5 $e5 $e5 $d5 $d5 $d5 $d5 $e5 $f5 $f5 $f5 $g5 $a5 $f5 $d5 $a4 $b5 $f5 $d5 $b4 $e3 $f3 $a3 $f4 $g4 $a4 $a4 $a4 $b4 $a4 $g4 $g4 $g4 $g4 $a4 $a4 $a4 $a4 $b4 $a4 $g4 $f4 $e4 $d4 $d4 $e4 $f4 $g4 $a4 $g4 $f4 $e4 $f4 $g4 $a4 $g4 $f4 $g4 $a4 $g4 $f4 $e4 $f4 $e4 $d4 $e4 $c4 $d4 $d4 $e4 $f4 $e4 $f4 $g4 $f4 $g4 $a4 $g4 $f4 $d4 $d4 $e4 $f4 $g4 $a4 $b4 $d4 $g4 $f4 $g4 $e4 $d4 $e4 $c4 $a4 $R $b4 $R $a4 $a4 $a4 $a4 $g4 $g4 $f4 $e4 $f4 $e4 $e4 $d4 $d4 $e4 $f4 $a4 $d4 $e4 $f4 $b4 $d4 $e4 $f4 $a4 $a4 $c5 $a4 $g4 $g4 $f4 $e4 $f4 $e4 $d4)
     beats=(8 8 16 12 8 8 16 8 8 12 16 8 8 8 8 24 8 8 16 8 8 8 16 8 8 8 16 12 8 8 32 12 8 16 8 12 12 16 8 12 8 16 12 8 8 12 24 12 8 16 12 8 8 24 8 8 16 8 8 16 32 8 8 16 8 12 8 12 8 8 8 16 8 12 8 12 32 12 8 12 8 12 8 12 8 8 8 16 8 8 8 32 12 8 24 8 12 8 16 8 12 8 12 8 8 8 8 32 8 8 16 8 8 8 24 8 8 12 8 8 8 12 12 12 12 8 8 24 32 8 8 32 32 8 8 32 16 12 24 8 12 12 8 8 8 32 12 8 8 8 32 12 8 8 8 32 12 12 8 32 8 8 32 8 12 16 16 16 16 16 16 32 8 8 32 8 8 16 16 24 32 8 12 32 8 8 32 8 8 16 16 16 16 16 16 24 8 8 16 12 12 16 12 16 24 8 16 24 8 12 32 32 32 32 12 12 8 8 24 32 32 16 12 8 12 16 8 8 8 24 8 8 8 24 8 8 8 12 12 8 8 24 32 32 16 16 16 32)
@@ -115,7 +120,7 @@ case $1 in
     beats=($cr $cr $no $cr $cr $no $cr $cr $cp $dc $bl $cr $cr $cp $dc $cr $cr $no $cr $cr $cp $dc $no $no $cr $cr $no $cr $cr $no $cr $cr $cp $dc $bl $cr $cr $cp $dc $cr $cr $cr $cr $cr $cr $no $no $cr $cr $cr $cr $bl $cr $cr $cr $cr $bl $cr $cr $cr $cr $bl $cr $cr $cr $cr $bl $cr $cr $cr $cr $bl $cr $cr $cr $cr $bl $cr $cr $cr $cr $cr $cr $no $cr $cr $cr $cr $no $no)
     bpm=150;
     ;;
-    "true_pirates" )
+  "true_pirates" )
     melody=()
     beats=()
     bpm=180;
@@ -136,18 +141,32 @@ pause=1000 # microsecondes
 
 
 
-
+# for linux with ALSA
+# https://linux.die.net/man/1/speaker-test
 # play_sound(frequency, time)
-play_sound() {
+play_sound_ALSA() {
   ( speaker-test --frequency $1 --test sine ) &
   pid=$!
   ./uwait $2
   kill -9 $pid
 }
-# play_sound 329 160000
 
+# for linux WSL with powershell
+play_sound_WSL() {
+  us=$2/1000
+  powershell.exe "[console]::beep($1,$us)"
+}
 
-# play_sound 400 200
+system=$(uname -r | grep -qi wsl && echo "wsl")
+case "$system" in
+  "wsl")
+    play_sound=play_sound_WSL
+    ;;
+  *)
+    play_sound=play_sound_ALSA
+    ;;
+esac
+
 
 tone=0 # microsecondes
 beat=0 # microsecondes
@@ -158,7 +177,8 @@ for (( i=0; i < ${#melody[@]}; ++i )) ; do
     beat=${beats[$i]}
     if [ $tone -gt 0 ]; then
       duration=$(($beat * $tempo))
-      play_sound $tone $(($duration))
+      echo "tone $tone time $duration"
+      $play_sound $tone $(($duration))
     else
       ./uwait $(($duration))
     fi
